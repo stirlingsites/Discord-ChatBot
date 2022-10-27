@@ -47,7 +47,7 @@ def user_input_output():
 def scheduler():
     username = input(f"Enter the username of the person you want to schedule an appointment with")
     print(f'Checking {username} calender to see their availability')
-    if check_date() == False:
+    if not check_date():
         print("Date entered is not valid")
         return
     minutes = input(f"How many minutes would you like your meeting to be?")
@@ -94,5 +94,3 @@ scheduler_dict = {
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     user_input_output()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
