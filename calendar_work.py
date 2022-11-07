@@ -5,8 +5,6 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.auth.exceptions import RefreshError
-
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -28,31 +26,30 @@ def get_credentials(author):
                     break
 
     # TODO: Ensure requests are visible/appear to the user instead of the bot.
+    # TODO: Add timeout feature in case the user decides not to log in or takes too long
     if not creds or not creds.valid:
-        # Send a request to refresh credentials if they are expired.
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        # Send a request to ask for the user's credentials if the user does not have any registered.
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+        # Send a request to ask for the user's credentials if they are expired or the user does not have any registered
+        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+        creds = flow.run_local_server(port=0)
 
         # Write the contents of creds to a json file to be read later.
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
         if os.path.exists('tokens.json'):
-            with open('tokens.json', 'r+') as tokens:
+            with open('tokens.json', 'r') as tokens:
                 with open('token.json', 'r') as token:
                     credentials = json.load(token)
                 data = json.load(tokens)
+            # Overwrite the json file with the updated data dictionary
+            with open('tokens.json', 'w') as tokens:
                 # Update the credentials in the json data
                 if name in data:
                     data.update({name: credentials})
                 else:
                     data[name] = credentials
                 json.dump(data, tokens)
-        # Create json if it does not already exist
+        # Create a json if it does not already exist
         else:
             with open('tokens.json', 'w') as tokens:
                 with open('token.json', 'r') as token:
@@ -104,5 +101,3 @@ def search_calendar(author, year, month, day):
         print('An error occurred: %s' % error)
     except UnboundLocalError:
         print("The username has not been registered to a calendar.")
-    except RefreshError as error:
-        print('An error occurred: %s' % error)
