@@ -16,6 +16,7 @@ def load_json(file):
 
 responses_data = load_json("bot.json")
 
+
 async def bot_response(user_message, ctx) -> str:
     # for each word in user message
     score_list = []
