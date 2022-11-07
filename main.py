@@ -5,18 +5,38 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import calendar_work
 import discord_bot
-
+from datetime import datetime
+import parsedatetime as pdt
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+client = discord.Client(intents=discord.Intents.all())
+
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+cal = pdt.Calendar()
+now = datetime.now()
 
 
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
+
+
+# Setup for sending a date and message from a mention to google calendar and chatbot algorithm respectively
+@bot.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.mentions:
+        start_message = message.content
+        reply = (f"\t%s" % (cal.parseDT(str(start_message), now)[0]))
+        split = start_message.split()
+        bot_answer = await discord_bot.bot_response(start_message, message)
+        await message.channel.send(bot_answer)
+        await message.channel.send(reply)
 
 
 # Command for getting user's credentials for their Google calendar:
