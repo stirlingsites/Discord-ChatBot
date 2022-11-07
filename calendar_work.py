@@ -5,12 +5,13 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from google.auth.exceptions import RefreshError
+
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
 def get_credentials(author):
-    # TODO: Assign username of person calling command to name (change next line)
     name = author
     creds = None
 
@@ -41,7 +42,7 @@ def get_credentials(author):
             token.write(creds.to_json())
 
         if os.path.exists('tokens.json'):
-            with open('tokens.json', 'a+') as tokens:
+            with open('tokens.json', 'r+') as tokens:
                 with open('token.json', 'r') as token:
                     credentials = json.load(token)
                 data = json.load(tokens)
@@ -58,3 +59,50 @@ def get_credentials(author):
                     credentials = json.load(token)
                 data = {name: credentials}
                 json.dump(data, tokens)
+
+
+def search_calendar(author, year, month, day):
+    name = author
+
+    start_date = datetime.datetime(year, month, day)
+    # Add one day to start_date to create a 24-hour window for events
+    end_date = start_date + datetime.timedelta(days=1)
+
+    # Change the timezone to EST
+    start_date = start_date.isoformat() + '-05:00'
+    end_date = end_date.isoformat() + '-05:00'
+
+    # Get the user's credentials from the json file
+    if os.path.exists('tokens.json'):
+        with open('tokens.json', 'r') as tokens:
+            data = json.load(tokens)
+        if name in data:
+            with open('token.json', 'w') as token:
+                json.dump(data[name], token)
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+
+    try:
+        service = build('calendar', 'v3', credentials=creds)
+
+        # Call the Calendar API
+        print('Getting the upcoming 10 events')
+        events_result = service.events().list(calendarId='primary', timeMax=end_date, timeMin=start_date,
+                                              maxResults=10, singleEvents=True,
+                                              orderBy='startTime').execute()
+        events = events_result.get('items', [])
+
+        if not events:
+            print('No upcoming events found.')
+            return
+
+        # Prints the start and name of the next 10 events
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            print(start, event['summary'])
+
+    except HttpError as error:
+        print('An error occurred: %s' % error)
+    except UnboundLocalError:
+        print("The username has not been registered to a calendar.")
+    except RefreshError as error:
+        print('An error occurred: %s' % error)
