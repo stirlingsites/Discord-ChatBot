@@ -2,46 +2,67 @@
 # Version 1.0
 import random
 import datetime
+import json
+import re
+import rand_response
+import sys
 
+
+def load_json(file):
+    with open(file) as bot_responses:
+        print(f"Successfully loaded {file}")
+        return json.load(bot_responses)
+
+
+responses_data = load_json("bot.json")
 
 def bot_response(user_message) -> str:
     # for each word in user message
-    for x in user_message.split():
-        # if word is in dictionary key
-        if x in dict_input_output.keys():
-            # print and return dictionary value for that key
-            print(f"{dict_input_output[x]}")
-            return f"{x}"
-    # if key not found return blank string
+    score_list = []
+    message_split = re.split(r'\s+|[,;.?!-]\s*', user_message.lower())
+
+    # check each response
+    for response in responses_data:
+        message_score = 0
+        required_score = 0
+        required_words = response["required_words"]
+
+        # check if there are required words
+        if required_words:
+            for word in message_split:
+                if word in required_words:
+                    required_score += 1
+
+        # check that the number or required words equal to the required score
+        if required_score == len(required_words):
+            for word in message_split:
+                if word in response["user_input"]:
+                    message_score += 1
+        # add score to list
+        score_list.append(message_score)
+
+    # find the best response
+    top_response = max(score_list)
+    response_index = score_list.index(top_response)
+
+    if user_message == "":
+        return "Please enter a message so I can respond!"
+
+    if top_response != 0:
+        return responses_data[response_index]["bot_response"]
+
+    return rand_response.random_string()
     return ""
 
 
 def user_input_output():
-    start_message = input(f"Hello, you are talking with a scheduling bot")
-    unsuccessful_attempts = 0
+    start_message = input(f"Hello, you are talking with a scheduling bot. Please enter a message: ")
+    bot_answer = bot_response(start_message)
+    print(f"{bot_answer}")
+    if bot_answer == "See you later!":
+        sys.exit()
     while start_message:
-        type = bot_response(start_message.lower())
-        # if user indicates they are trying to schedule an appointment send them to scheduler func
-        if type == "yes":
-            scheduler()
-            break
-        # if user is not trying to schedule an appointment get input on what they want to do
-        elif type == "no":
-            start_message = input()
-            break
-        # if bot doesn't understand user input
-        elif type == "":
-            message = input(f"Sorry we didn't get that, try rephrasing (enter bye to exit): ")
-            unsuccessful_attempts += 1
-            # send user to real employee in 3 unsuccessful attempts to understand user
-            if unsuccessful_attempts == 3:
-                print("We will transfer you to an associate")
-                break
-        elif type == "bye":
-            # end if user says bye
-            break
-        else:
-            start_message = input(f"Enter your message: ")
+        start_message = input(f"Enter your message: ")
 
 
 def scheduler():
@@ -67,6 +88,8 @@ def check_date():
     year = int(input(f"Please enter the year you would like to meet on (YYYY)"))
     month = int(input(f"Please enter the month you would like to meet on (MM)"))
     day = int(input(f"Please enter the day you would like to meet on (DD)"))
+    dob = input("Please enter dob (dd/mm")
+    dob.split()
     valid = False
     try:
         new_date = datetime.datetime(year, month, day)
@@ -75,21 +98,6 @@ def check_date():
         valid = False
     return valid
 
-
-dict_input_output = {
-    "schedule": "Are you trying to schedule an appointment?",
-    "hi": "Hello, would you like to schedule an appointment?",
-    "hello": "Hello, would you like to schedule an appointment?",
-    "hey": "Hello, would you like to schedule an appointment?",
-    "yes": "Ok one moment",
-    "no": "What are you trying to do?",
-    "goodbye": "ttyl",
-    "bye": "ttyl"
-}
-
-scheduler_dict = {
-
-}
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
