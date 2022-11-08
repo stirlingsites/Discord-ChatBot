@@ -28,12 +28,13 @@ async def on_ready():
 # Setup for sending a date and message from a mention to google calendar and chatbot algorithm respectively
 @bot.event
 async def on_message(message):
+    author = str(message.author)
     if message.author == client.user:
         return
     if message.mentions:
         start_message = message.content
-        reply = (f"\t%s" % (cal.parseDT(str(start_message), now)[0]))
-        split = start_message.split()
+        reply = (f"%s" % (cal.parseDT(str(start_message), now)[0]))
+        await calendar_work.search2_calendar(author, message, reply)
         bot_answer = await discord_bot.bot_response(start_message, message)
         await message.channel.send(bot_answer)
         await message.channel.send(reply)
