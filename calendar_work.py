@@ -104,7 +104,7 @@ def search_calendar(author, year, month, day):
         print("The username has not been registered to a calendar.")
 
 
-# Search calendar for Discord bot
+# Search calendar for Discord bot.
 async def search2_calendar(author, message, date):
     name = author
 

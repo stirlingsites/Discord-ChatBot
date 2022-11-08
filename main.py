@@ -25,7 +25,7 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 
-# Setup for sending a date and message from a mention to google calendar and chatbot algorithm respectively
+# Setup for sending a date and message from a mention to google calendar and chatbot algorithm respectively.
 @bot.event
 async def on_message(message):
     author = str(message.author)
