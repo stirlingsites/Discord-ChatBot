@@ -1,5 +1,4 @@
 import os
-import json
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -38,13 +37,14 @@ async def on_message(message):
         bot_answer = await discord_bot.bot_response(start_message, message)
         await message.channel.send(bot_answer)
         await message.channel.send(reply)
+    await bot.process_commands(message)
 
 
 # Command for getting user's credentials for their Google calendar:
 @bot.command(name='calendar')
 async def calendar_creds(ctx):
     author = str(ctx.message.author)
-    calendar_work.get_credentials(author)
+    await calendar_work.get_credentials(ctx, bot, discord.Embed(), author)
 
 
 # Command for starting a conversation with the bot
