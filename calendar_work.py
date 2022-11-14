@@ -6,11 +6,12 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
-def get_credentials(author):
+async def get_credentials(ctx, bot, embed, author):
     name = author
     creds = None
 
@@ -26,12 +27,36 @@ def get_credentials(author):
                     creds = Credentials.from_authorized_user_file('token.json', SCOPES)
                     break
 
-    # TODO: Ensure requests are visible/appear to the user instead of the bot.
-    # TODO: Add timeout feature in case the user decides not to log in or takes too long
     if not creds or not creds.valid:
-        # Send a request to ask for the user's credentials if they are expired or the user does not have any registered
-        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
+        # Send a request to refresh for the user's credentials if they are expired
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        # Send a request to ask for the user's credentials if they do not have any registered
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            flow.redirect_uri = "https://google.com"
+            auth_url, _ = flow.authorization_url(prompt='consent')
+            embed.description = f"To authorize the bot to access your calendar, sign in [here]({auth_url}) " \
+                                "and then respond to this message with the resulting url."
+
+            # TODO: Complete this process through Direct Messages rather than the server channel
+            try:
+                await ctx.send(embed=embed)
+                response = await bot.wait_for("message", timeout=100)
+                code = response.content
+                # Slice the url to contain only the authorization code
+                code = code[code.find("code=") + 5:]
+                code = code[:code.find('&')]
+
+                # Use the inputted authorization code to fetch the user's token
+                flow.fetch_token(code=code)
+                creds = flow.credentials
+            except InvalidGrantError:
+                await ctx.send("No valid code was sent. Please try again later.")
+                return
+            except TimeoutError:
+                await ctx.send("The request timed out. Please try again later.")
+                return
 
         # Write the contents of creds to a json file to be read later.
         with open('token.json', 'w') as token:
