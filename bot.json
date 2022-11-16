@@ -2,37 +2,37 @@
   {
     "response_type": "greeting",
     "user_input": ["hello", "hi", "hey"],
-    "bot_response": "Hey there!",
+    "bot_response": ["Hello!","Hey there!", "Hi"],
     "required_words": []
   },
   {
     "response_type": "greeting",
     "user_input": ["see you", "goodbye", "bye", "good bye", "talk to you later", "ttyl"],
-    "bot_response": "See you later!",
+    "bot_response": ["See you later!", "Bye", "Nice talking with you"],
     "required_words": []
   },
   {
     "response_type": "greeting",
     "user_input": ["nice", "to", "meet", "you"],
-    "bot_response": "The pleasure is all mine!",
+    "bot_response": ["The pleasure is all mine!", "Nice meeting you as well", "You as well"],
     "required_words": ["nice", "meet", "you"]
   },
   {
     "response_type": "question",
     "user_input": ["how", "to", "learn", "code", "coding", "apps"],
-    "bot_response": "Start by typing: 'How to learn coding' on Google.",
+    "bot_response": ["Start by typing: 'How to learn coding' on Google.", "Ask your professor", "I suggest for you to Take a coding course"],
     "required_words": ["learn", "code"]
   },
   {
     "response_type": "question",
     "user_input": ["refund", "how", "can", "I", "get"],
-    "bot_response": "We don't offer refunds for free education.",
+    "bot_response": ["We don't offer refunds", "This bot service is free of charge", "Sorry, I can't give you a refund"],
     "required_words": ["refund", "i"]
   },
   {
     "response_type": "question",
     "user_input": ["how", "are", "you"],
-    "bot_response": "I'm great! Thanks for asking.",
+    "bot_response": ["I'm great! Thanks for asking.", "I'm doing well", "I'm okay!"],
     "required_words": ["how", "are", "you"]
   }
 ]
