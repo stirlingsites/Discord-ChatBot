@@ -1,12 +1,10 @@
 # Chatbot algorithm
 # Version 1.0
-import random
-import datetime
 import json
 import re
 import rand_response
 import sys
-
+import games
 
 def load_json(file):
     with open(file) as bot_responses:
@@ -49,6 +47,7 @@ def bot_response(user_message) -> str:
         return "Please enter a message so I can respond!"
 
     if top_response != 0:
+        list_length = len(responses_data[response_index]["bot_response"])
         return responses_data[response_index]["bot_response"]
 
     return rand_response.random_string()
@@ -56,47 +55,32 @@ def bot_response(user_message) -> str:
 
 
 def user_input_output():
-    start_message = input(f"Hello, you are talking with a scheduling bot. Please enter a message: ")
-    bot_answer = bot_response(start_message)
-    print(f"{bot_answer}")
-    if bot_answer == "See you later!":
-        sys.exit()
+    start_message = "Hello, you are using the scheduling bot."
+    print(start_message)
     while start_message:
-        start_message = input(f"Enter your message: ")
-
-
-def scheduler():
-    username = input(f"Enter the username of the person you want to schedule an appointment with")
-    print(f'Checking {username} calender to see their availability')
-    if check_date() == False:
-        print("Date entered is not valid")
-        return
-    minutes = input(f"How many minutes would you like your meeting to be?")
-    # TODO check avaliability of usernames calander on date for minutes
-    print(f"{username} is avaliable at these time: option 1 option 2 option 3")
-    time_choice = input("Please select an option (1, 2, or 3)")
-    subject = input("What is the requested meeting going to be about?")
-    notes = input("Please type any notes you would like to add to the appointment")
-    # TODO create the meeting at time_choice with title subject and any notes
-    print("Meeting has successfully been created.")
-    return 1
-
-
-# TODO make date invalid for past
-# Checks that Date is valid
-def check_date():
-    year = int(input(f"Please enter the year you would like to meet on (YYYY)"))
-    month = int(input(f"Please enter the month you would like to meet on (MM)"))
-    day = int(input(f"Please enter the day you would like to meet on (DD)"))
-    dob = input("Please enter dob (dd/mm")
-    dob.split()
-    valid = False
-    try:
-        new_date = datetime.datetime(year, month, day)
-        valid = True
-    except ValueError:
-        valid = False
-    return valid
+        start_message = input(f"Enter the message from other person (enter 'game' to play a game): ")
+        if start_message == "game":
+            game_choice = input(
+                "Enter the type of game you want to play: 'Trivia' or 'Guessing' or 'Fill in the Blank':").lower().strip()
+            # send users choice to game factory
+            gametype = games.gameFactory(game_choice)
+            # calls game_category function on object to determine type of game user wants to play
+            result = gametype.game_category()
+            # calls game_category function on object to determine category of chosen game  user wants to play
+            type = result.game_category()
+            # run the game the user picked
+            type.run_game()
+        bot_answer = bot_response(start_message)
+        print(f"Option 1: {bot_answer[0]}, Option 2: {bot_answer[1]}, Option 3: {bot_answer[2]}")
+        user_choice = int(input("Please enter choose your response '1', '2', or '3':"))
+        if user_choice == 1:
+            print(f"Your response is: {bot_answer[0]}")
+        elif user_choice == 2:
+            print(f"Your response is: {bot_answer[1]}")
+        elif user_choice == 3:
+            print(f"Your response is: {bot_answer[2]}")
+        if bot_answer == "See you later!":
+            sys.exit()
 
 
 # Press the green button in the gutter to run the script.
