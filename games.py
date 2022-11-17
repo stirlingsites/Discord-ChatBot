@@ -6,15 +6,19 @@ from random import sample
 class gameFactory:
     def __init__(self, type_of_game):
         self.type_of_game = type_of_game
+
     def game_category(self):
         if self.type_of_game == "trivia":
-            game = input("Enter the type of trivia you want to play: 'Movies' or 'Celebrities' or 'Sports':").lower().strip()
+            game = input(
+                "Enter the type of trivia you want to play: 'Movies' or 'Celebrities' or 'Sports':").lower().strip()
             return triviaFactory(game)
         elif self.type_of_game == "guessing":
-            game = input("Enter the type of guessing game you want to play: 'Card' or 'Number' or 'What Am I Riddles':").lower().strip()
+            game = input(
+                "Enter the type of guessing game you want to play: 'Card' or 'Number' or 'What Am I Riddles':").lower().strip()
             return guessFactory(game)
         elif self.type_of_game == "fill in the blank":
-            game = input("Enter the type of fill in the blank game you want to play: 'TV' or 'Math' or 'Music':").lower().strip()
+            game = input(
+                "Enter the type of fill in the blank game you want to play: 'TV' or 'Math' or 'Music':").lower().strip()
             return fibFactory(game)
         raise AssertionError("Game type is not valid.")
 
@@ -30,6 +34,7 @@ class triviaFactory(gameFactory):
             return movie_trivia()
         raise AssertionError("Trivia type is not valid.")
 
+
 class guessFactory(gameFactory):
     def game_category(self):
         if self.type_of_game == "card":
@@ -39,6 +44,7 @@ class guessFactory(gameFactory):
         elif self.type_of_game == "what am i riddles":
             return what_am_i_riddles_guess()
         raise AssertionError("Guessing game type is not valid.")
+
 
 class fibFactory(gameFactory):
     def game_category(self):
@@ -51,7 +57,27 @@ class fibFactory(gameFactory):
         raise AssertionError("Fill in the blank type is not valid.")
 
 
-class math_fib():
+class GameInterface:
+    questions = {}
+
+    def check_guess(self):
+        score = 0
+        for key in self.questions:
+            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
+            if answer == self.questions[key]:
+                print("Correct!")
+                score += 1
+            else:
+                print("Incorrect")
+        return score
+
+    def run_game(self):
+        print("You are now starting your game!")
+        correct_answers = self.check_guess()
+        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
+
+
+class math_fib(GameInterface):
     questions = {
         "111 + 222 + 333 = ?": "666",
         "200 - (96 / 4) = ?": "176",
@@ -63,24 +89,8 @@ class math_fib():
         "100 + 423 + ? = 656 ": "133"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your movie trivia game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class tv_fib():
+class tv_fib(GameInterface):
     questions = {
         "The ______ diaries": "vampire",
         "America's next top ______": "model",
@@ -92,24 +102,8 @@ class tv_fib():
         "Are you ______ of the dark?": "afraid"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your tv fill in the blank game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class music_fib():
+class music_fib(GameInterface):
     questions = {
         "You ______ with me": "belong",
         "______ yourself": "lose",
@@ -121,24 +115,8 @@ class music_fib():
         "Clap along if you feel like a room without a ______": "roof"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your music fill in the blank game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class movie_trivia():
+class movie_trivia(GameInterface):
     questions = {
         "For what movie did Tom Hanks score his first Academy Award nomination?": "big",
         "What flavor of Pop Tart does buddy the elf use in his spaghetti in elf?": "chocolate",
@@ -150,24 +128,8 @@ class movie_trivia():
         "What was the top grossing movie of 2014?": "guardians of the galaxy"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your movie trivia game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class sports_trivia():
+class sports_trivia(GameInterface):
     questions = {
         "The olympics are held every how many years?": "4",
         "What sport is best known as the 'king of sports'?": "soccer",
@@ -178,24 +140,9 @@ class sports_trivia():
         "In what year were women allowed to compete in the modern Olympic games?": "1990",
         "How many Olympic games were held in countries that no longer exist?": "3"
     }
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
-
-    def run_game(self):
-        print("You are now starting your celebrities trivia game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
 
 
-class celebrities_trivia():
+class celebrities_trivia(GameInterface):
     questions = {
         "Ariana Grande got her start on what kids TV show?": "victorious",
         "Who is the oldest Kardashian sister?": "kourtney",
@@ -207,24 +154,8 @@ class celebrities_trivia():
         "Prior to appearing on Parks and Recreation, Rashida Jones starred on what sitcom": "The office"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your sports trivia game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class what_am_i_riddles_guess():
+class what_am_i_riddles_guess(GameInterface):
     questions = {
         "I have a head and a tail that will never meet. Having too many of me is always a treat. What am I?": "coin",
         "I can fly but have no wings. I can cry but have no eyes. Wherever I go, darkness follows me. What am I?": "cloud",
@@ -236,32 +167,18 @@ class what_am_i_riddles_guess():
         "A seed with three letters in my name. Take away two and I still sound the same. What am I?": "pea"
     }
 
-    def check_guess(self):
-        score = 0
-        for key in self.questions:
-            answer = input(f"Question: {key}\nPlease enter you answer: ").lower().strip()
-            if answer == self.questions[key]:
-                print("Correct!")
-                score += 1
-            else:
-                print("Incorrect")
-        return score
 
-    def run_game(self):
-        print("You are now starting your what am I riddles guessing game!")
-        correct_answers = self.check_guess()
-        print(f"You answered {correct_answers} out of 8 correctly! Good job!")
-
-
-class number_guess():
+class number_guess(GameInterface):
     def guess_number(self):
         guess = int(input("What number (1-10) do you think I picked?"))
         return guess
+
     def check_number(self, guess, number):
         if guess > number:
             print("Your guess was too high")
         else:
             print("Your guess was too low")
+
     def run_game(self):
         number = random.randint(1, 10)
         guess = self.guess_number()
@@ -271,8 +188,7 @@ class number_guess():
         print(f"You picked {number} which is the correct number!")
 
 
-
-class card_guess():
+class card_guess(GameInterface):
     # set of possible suits
     suits = {"hearts", "spades", "clubs", "diamonds"}
     # set of possible card values
