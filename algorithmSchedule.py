@@ -70,6 +70,7 @@ def user_input_output():
             type = result.game_category()
             # run the game the user picked
             type.run_game()
+            continue
         bot_answer = bot_response(start_message)
         print(f"Option 1: {bot_answer[0]}, Option 2: {bot_answer[1]}, Option 3: {bot_answer[2]}")
         user_choice = int(input("Please enter choose your response '1', '2', or '3':"))
