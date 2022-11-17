@@ -7,6 +7,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
+import dateutil
+from dateutil.parser import parse
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -156,8 +158,9 @@ async def search2_calendar(mentions_string, date, mentions_real):
         # Prints the start and name of the next 10 events.
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
+            start = datetime.strftime(parse(start), format='%d %B, %H:%M %p')
             this_event = event['summary']
-            await mentions_real.send(f"{start}, {this_event}")
+            await mentions_real.send(f"You have {this_event} on {start}!")
 
     except HttpError as error:
         await mentions_real.send('An error occurred: %s' % error)
@@ -188,5 +191,3 @@ def add_event(author, start, end, summary):
         service.events().insert(calendarId='primary', sendNotifications=True, body=event).execute()
     except UnboundLocalError:
         print("You have not registered a calendar to your account. You can start by entering '!calendar'.")
-
-
