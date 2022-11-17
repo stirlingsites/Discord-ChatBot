@@ -25,9 +25,10 @@ def search_creds(name):
     return
 
 
-async def get_credentials(ctx, bot, embed, author):
+async def get_credentials(ctx, bot, embed, author, author2):
     name = author
     creds = search_creds(name)
+    author = author2
 
     if not creds or not creds.valid:
         # Send a request to refresh for the user's credentials if they are expired.
@@ -43,7 +44,7 @@ async def get_credentials(ctx, bot, embed, author):
 
             # TODO: Complete this process through Direct Messages rather than the server channel
             try:
-                await ctx.send(embed=embed)
+                await author.send(embed=embed)
                 response = await bot.wait_for("message", timeout=100)
                 code = response.content
                 # Slice the url to contain only the authorization code.
@@ -54,10 +55,10 @@ async def get_credentials(ctx, bot, embed, author):
                 flow.fetch_token(code=code)
                 creds = flow.credentials
             except InvalidGrantError:
-                await ctx.send("No valid code was sent. Please try again later.")
+                await author.send("No valid code was sent. Please try again later.")
                 return
             except TimeoutError:
-                await ctx.send("The request timed out. Please try again later.")
+                await author.send("The request timed out. Please try again later.")
                 return
 
         # Write the contents of creds to a json file to be read later.
@@ -125,8 +126,8 @@ def search_calendar(author, year, month, day):
 
 
 # Search calendar for Discord bot.
-async def search2_calendar(author, message, date):
-    name = author
+async def search2_calendar(mentions_string, date, mentions_real):
+    name = mentions_string
 
     start_date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
     # Add one day to start_date to create a 24-hour window for events.
@@ -142,26 +143,26 @@ async def search2_calendar(author, message, date):
         service = build('calendar', 'v3', credentials=creds)
 
         # Call the Calendar API.
-        await message.channel.send('Getting the upcoming 10 events')
+        await mentions_real.send('Getting the upcoming 10 events')
         events_result = service.events().list(calendarId='primary', timeMax=end_date, timeMin=start_date,
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
 
         if not events:
-            await message.channel.send('No upcoming events found.')
+            await mentions_real.send('No upcoming events found.')
             return
 
         # Prints the start and name of the next 10 events.
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             this_event = event['summary']
-            await message.channel.send(f"{start}, {this_event}")
+            await mentions_real.send(f"{start}, {this_event}")
 
     except HttpError as error:
-        await message.channel.send('An error occurred: %s' % error)
+        await mentions_real.send('An error occurred: %s' % error)
     except UnboundLocalError:
-        await message.channel.send("The username has not been registered to a calendar.")
+        await mentions_real.send("The username has not been registered to a calendar.")
     return
 
 
@@ -187,3 +188,5 @@ def add_event(author, start, end, summary):
         service.events().insert(calendarId='primary', sendNotifications=True, body=event).execute()
     except UnboundLocalError:
         print("You have not registered a calendar to your account. You can start by entering '!calendar'.")
+
+
