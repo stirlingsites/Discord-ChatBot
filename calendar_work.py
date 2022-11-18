@@ -88,6 +88,7 @@ async def get_credentials(bot, embed, author, author2):
                 json.dump(data, tokens)
 
         await author.send("Credentials received successfully.")
+    await author.send("You already have valid calendar credentials registered.")
 
 
 def search_calendar(author, year, month, day):

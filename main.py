@@ -18,7 +18,6 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 cal = pdt.Calendar()
-now = datetime.now()
 
 
 @bot.event
@@ -36,8 +35,11 @@ async def on_message(message):
         mentions_string = str(message.mentions[0])
         mentions_real = bot.get_user(message.mentions[0].id)
         start_message = message.content
+        now = datetime.now().replace(microsecond=0)
         reply = (f"%s" % (cal.parseDT(str(start_message), now)[0]))
-        await calendar_work.search2_calendar(mentions_string, reply, mentions_real)
+        if str(reply) != str(now):
+            await calendar_work.search2_calendar(mentions_string, reply, mentions_real)
+            return
         bot_answer = await discord_bot.bot_response(start_message)
         bot_answer = random.sample(bot_answer, 3)
         button1 = discord.ui.Button(label=f"{bot_answer[0]}", style=discord.ButtonStyle.gray)
@@ -76,6 +78,7 @@ async def calendar_creds(ctx):
 async def add_event(ctx, day, time, length, *summary):
     author = ctx.message.author
     date = day + " " + time
+    now = datetime.now().replace(microsecond=0)
     start = (f"%s" % (cal.parseDT(str(date), now)[0]))
     await calendar_work.add_event(start, length, summary, author)
 
