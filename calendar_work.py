@@ -160,9 +160,9 @@ async def search2_calendar(mentions_string, date, mentions_real):
         # Prints the start and name of the next 10 events.
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
-            start = datetime.strftime(parse(start), format='%d %B, %H:%M %p')
+            start = datetime.strftime(parse(start), format='%H:%M, on %d %B')
             this_event = event['summary']
-            await mentions_real.send(f"You have {this_event} on {start}!")
+            await mentions_real.send(f"You have {this_event} at {start}!")
 
     except HttpError as error:
         await mentions_real.send('An error occurred: %s' % error)
