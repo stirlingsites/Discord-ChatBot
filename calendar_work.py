@@ -7,8 +7,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
-import dateutil
 from dateutil.parser import parse
+from asyncio.exceptions import TimeoutError
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -27,7 +27,7 @@ def search_creds(name):
     return
 
 
-async def get_credentials(ctx, bot, embed, author, author2):
+async def get_credentials(bot, embed, author, author2):
     name = author
     creds = search_creds(name)
     author = author2
@@ -44,7 +44,6 @@ async def get_credentials(ctx, bot, embed, author, author2):
             embed.description = f"To authorize the bot to access your calendar, sign in [here]({auth_url}) " \
                                 "and then respond to this message with the resulting url."
 
-            # TODO: Complete this process through Direct Messages rather than the server channel
             try:
                 await author.send(embed=embed)
                 response = await bot.wait_for("message", timeout=100)
@@ -87,6 +86,9 @@ async def get_credentials(ctx, bot, embed, author, author2):
                     credentials = json.load(token)
                 data = {name: credentials}
                 json.dump(data, tokens)
+
+        await author.send("Credentials received successfully.")
+    await author.send("You already have valid calendar credentials registered.")
 
 
 def search_calendar(author, year, month, day):
@@ -169,25 +171,30 @@ async def search2_calendar(mentions_string, date, mentions_real):
     return
 
 
-def add_event(author, start, end, summary):
-    name = author
+async def add_event(start, length, summary, author):
+    name = str(author)
     creds = search_creds(name)
+    summary = " ".join(summary)
 
     start = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
-    end = datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
+    end = start + timedelta(hours=float(length))
 
     # Change the timezone to EST.
     start = start.isoformat() + '-05:00'
     end = end.isoformat() + '-05:00'
 
-    # TODO: Change prints to send through Discord
     try:
         service = build('calendar', 'v3', credentials=creds)
         event = {
             'summary': summary,
-            'start': start,
-            'end': end
+            'start': {
+                "dateTime": start
+            },
+            'end': {
+                "dateTime": end
+            }
         }
         service.events().insert(calendarId='primary', sendNotifications=True, body=event).execute()
+        await author.send("Event added to calendar successfully.")
     except UnboundLocalError:
-        print("You have not registered a calendar to your account. You can start by entering '!calendar'.")
+        await author.send("You have not registered a calendar to your account. You can start by entering '!calendar'.")
