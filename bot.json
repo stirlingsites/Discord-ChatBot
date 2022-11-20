@@ -34,5 +34,36 @@
     "user_input": ["how", "are", "you"],
     "bot_response": ["I'm great! Thanks for asking.", "I'm doing well", "I'm okay!"],
     "required_words": ["how", "are", "you"]
+  },
+  {"response_type": "question",
+    "user_input": ["do", "you", "want", "to", "hang", "out"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["hang", "out"]
+  },
+  {"response_type": "question",
+    "user_input": ["do", "you", "want", "to", "meet", "up"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["meet", "up"]
+  },
+  {"response_type": "question",
+    "user_input": ["do", "you", "want", "to", "go", "out"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["want", "to", "go"]
+  },
+  {"response_type": "question",
+    "user_input": ["will", "you", "be", "free", "tonight"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["be", "free"]
+  },
+  {"response_type": "question",
+    "user_input": ["do", "you", "want", "to", "see"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["do", "you", "want", "to"]
+  },
+    {"response_type": "question",
+    "user_input": ["do", "you", "want", "to", "go", "to", "the"],
+    "bot_response": ["Yes", "No", "Maybe"],
+    "required_words": ["do", "you", "want", "to", "go", "to"]
   }
+
 ]
