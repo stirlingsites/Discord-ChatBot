@@ -61,9 +61,10 @@ def user_input_output():
         start_message = input(f"Enter the message from other person (enter 'game' to play a game): ")
         if start_message == "game":
             game_choice = input(
-                "Enter the type of game you want to play: 'Trivia' or 'Guessing' or 'Fill in the Blank':").lower().strip()
+                "Enter the type of game you want to play: 'Trivia' or 'Guessing' or 'Fill in the Blank', enter 'quit' "
+                "to quit:").lower().strip()
             # send users choice to game factory
-            gametype = games.gameFactory(game_choice)
+            gametype = games.GameFactory(game_choice)
             # calls game_category function on object to determine type of game user wants to play
             result = gametype.game_category()
             # calls game_category function on object to determine category of chosen game  user wants to play
@@ -73,15 +74,15 @@ def user_input_output():
             continue
         bot_answer = bot_response(start_message)
         print(f"Option 1: {bot_answer[0]}, Option 2: {bot_answer[1]}, Option 3: {bot_answer[2]}")
-        user_choice = int(input("Please enter choose your response '1', '2', or '3':"))
-        if user_choice == 1:
-            print(f"Your response is: {bot_answer[0]}")
-        elif user_choice == 2:
-            print(f"Your response is: {bot_answer[1]}")
-        elif user_choice == 3:
-            print(f"Your response is: {bot_answer[2]}")
-        if bot_answer == "See you later!":
+        user_choice = input("Please enter choose your response '1', '2', or '3', enter 'quit' to quit:")
+        if user_choice == "quit":
             sys.exit()
+        if int(user_choice) == 1:
+            print(f"Your response is: {bot_answer[0]}")
+        elif int(user_choice) == 2:
+            print(f"Your response is: {bot_answer[1]}")
+        elif int(user_choice) == 3:
+            print(f"Your response is: {bot_answer[2]}")
 
 
 # Press the green button in the gutter to run the script.
