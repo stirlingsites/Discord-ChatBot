@@ -12,6 +12,6 @@
 ![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/ChatBot1.png)
 
 **Step 2:** The bot gives the user different options to respond with in DMs
-![screenshot]()
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/ChatBot2.png)
 
 
