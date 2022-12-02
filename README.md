@@ -16,3 +16,26 @@
 
 **Step 3:** The user then picks an option and that response is sent in the chat.
 ![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/ChatBot3.png)
+
+## Using the Calander
+
+**Step 1:** Users can begin giving their credentials with !calendar
+![screenshot](
+
+**Step 2:** The bot sends a DM with a link to sign into Google
+![screenshot](
+
+**Step 3:** After signing in, users are redirected to a Google page containing their authorization code in the url
+![screenshot](
+
+**Step 4:** Users send the bot the url through DMs and receive a confirmation message
+![screenshot](
+
+**Step 5:** Users can mention others with a specified time to initiate event adding
+![screenshot](
+
+**Step 6:** The bot shows mentioned users their scheduled events through DMs and users can set up a new event in their calendar
+![screenshot](
+
+**Step 7:** The event now appears in the user’s Google Calendar
+![screenshot](
