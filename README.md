@@ -6,3 +6,5 @@
 
 **Next Steps to Improve The Discord Bot:** Add machine learning, add additional bot responses, and integrate the bot with other claander APIs
 
+## Using the Chat Bot:
+
