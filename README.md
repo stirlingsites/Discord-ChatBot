@@ -20,22 +20,22 @@
 ## Using the Calander
 
 **Step 1:** Users can begin giving their credentials with !calendar
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot1.png)
 
 **Step 2:** The bot sends a DM with a link to sign into Google
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot2.png)
 
 **Step 3:** After signing in, users are redirected to a Google page containing their authorization code in the url
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot3.png)
 
 **Step 4:** Users send the bot the url through DMs and receive a confirmation message
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot4.png)
 
 **Step 5:** Users can mention others with a specified time to initiate event adding
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot5.png)
 
 **Step 6:** The bot shows mentioned users their scheduled events through DMs and users can set up a new event in their calendar
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot6.png)
 
 **Step 7:** The event now appears in the user’s Google Calendar
-![screenshot](
+![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/CalanderBot7.png)
