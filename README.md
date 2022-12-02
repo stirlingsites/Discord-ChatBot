@@ -7,5 +7,7 @@
 **Next Steps to Improve The Discord Bot:** Add machine learning, add additional bot responses, and integrate the bot with other claander APIs
 
 ## Using the Chat Bot:
+
+**Step 1:** When the user is mentioned the bot will send them a DM with options to respond
 ![screenshot](https://github.com/stirlingsites/Discord-ChatBot/blob/main/ChatBot1.png)
 
